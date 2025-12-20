@@ -1,13 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Users, DollarSign, Map } from "lucide-react";
+import { Calendar, Users, DollarSign, Map, MessageSquare } from "lucide-react";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
+import ChatWindow from "../components/chat/ChatWindow";
 
 export default function MyBookings() {
   const navigate = useNavigate();
@@ -66,7 +67,16 @@ export default function MyBookings() {
                     <p className="text-sm text-gray-600"><strong>Special requests:</strong> {booking.special_requests}</p>
                   </div>
                 )}
-                <div className="mt-4">
+                <div className="mt-4 flex gap-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => setSelectedChat({ bookingId: booking.id, experienceId: booking.experience_id, hostName: booking.experience_name })}
+                    className="border-indigo-500 text-indigo-600 hover:bg-indigo-50"
+                  >
+                    <MessageSquare className="w-4 h-4 mr-2" />
+                    Chat with Host
+                  </Button>
                   <Button
                     size="sm"
                     variant="outline"
