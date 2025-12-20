@@ -6,11 +6,13 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowLeft, Star, Clock, Users, MapPin, CheckCircle, DollarSign, Heart } from "lucide-react";
+import { ArrowLeft, Star, Clock, Users, MapPin, CheckCircle, DollarSign, Heart, MessageSquare } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Skeleton } from "@/components/ui/skeleton";
+import BookingWizard from "../components/booking/BookingWizard";
+import ChatWindow from "../components/chat/ChatWindow";
 
 export default function ExperienceDetail() {
   const navigate = useNavigate();
