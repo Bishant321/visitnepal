@@ -6,7 +6,8 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowLeft, Star, Clock, Users, MapPin, CheckCircle, DollarSign } from "lucide-react";
+import { ArrowLeft, Star, Clock, Users, MapPin, CheckCircle, DollarSign, Heart } from "lucide-react";
+import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -50,10 +51,42 @@ export default function ExperienceDetail() {
     mutationFn: (data) => base44.entities.Booking.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['bookings'] });
-      alert("Booking request submitted! The host will contact you shortly.");
+      toast.success("Booking request submitted! The host will contact you shortly.");
       navigate(createPageUrl("MyBookings"));
     },
   });
+
+  const addToWishlistMutation = useMutation({
+    mutationFn: (data) => base44.entities.Wishlist.create(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['wishlist'] });
+      toast.success("Added to wishlist!");
+    },
+  });
+
+  const removeFromWishlistMutation = useMutation({
+    mutationFn: (id) => base44.entities.Wishlist.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['wishlist'] });
+      toast.success("Removed from wishlist");
+    },
+  });
+
+  const toggleWishlist = () => {
+    if (isInWishlist) {
+      const item = wishlist.find(w => w.experience_id === experienceId);
+      if (item) removeFromWishlistMutation.mutate(item.id);
+    } else {
+      addToWishlistMutation.mutate({
+        experience_id: experienceId,
+        experience_name: experience.name,
+        experience_category: experience.category,
+        experience_location: experience.location,
+        experience_price: experience.price,
+        experience_image_url: experience.image_url
+      });
+    }
+  };
 
   const handleBooking = (e) => {
     e.preventDefault();
@@ -191,12 +224,22 @@ export default function ExperienceDetail() {
                 </div>
 
                 {!showBooking ? (
-                  <Button
-                    onClick={() => setShowBooking(true)}
-                    className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white py-6 text-lg"
-                  >
-                    Book Now
-                  </Button>
+                  <div className="space-y-3">
+                    <Button
+                      onClick={() => setShowBooking(true)}
+                      className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white py-6 text-lg"
+                    >
+                      Book Now
+                    </Button>
+                    <Button
+                      onClick={toggleWishlist}
+                      variant="outline"
+                      className={`w-full py-3 ${isInWishlist ? 'bg-pink-50 border-pink-300 text-pink-600 hover:bg-pink-100' : 'hover:bg-gray-50'}`}
+                    >
+                      <Heart className={`w-4 h-4 mr-2 ${isInWishlist ? 'fill-pink-600' : ''}`} />
+                      {isInWishlist ? 'Saved to Wishlist' : 'Add to Wishlist'}
+                    </Button>
+                  </div>
                 ) : (
                   <form onSubmit={handleBooking} className="space-y-4">
                     <div>
