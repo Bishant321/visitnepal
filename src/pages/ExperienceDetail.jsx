@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowLeft, Star, Clock, MapPin, CheckCircle } from "lucide-react";
+import { ArrowLeft, Star, Clock, Users, MapPin, CheckCircle, DollarSign } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -27,6 +27,14 @@ export default function ExperienceDetail() {
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me(),
   });
+
+  const { data: wishlist = [] } = useQuery({
+    queryKey: ['wishlist'],
+    queryFn: () => base44.entities.Wishlist.filter({ created_by: user?.email }),
+    enabled: !!user,
+  });
+
+  const isInWishlist = wishlist.some(item => item.experience_id === experienceId);
 
   const experience = experiences.find(e => e.id === experienceId);
 

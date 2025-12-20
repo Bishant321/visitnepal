@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { Compass, Map, User, Bell, ShoppingBag } from "lucide-react";
+import { Mountain, Compass, Landmark, Map, User, Sparkles, MessageSquare, Bell, ShoppingBag } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import LanguageSwitcher, { useLanguage } from "../components/LanguageSwitcher";
@@ -59,7 +59,7 @@ export default function Layout({ children, currentPageName }) {
                 <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-400 rounded-full animate-ping" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold tracking-tight">Nepal for Visit 🇳🇵</h1>
+                <h1 className="text-2xl font-bold tracking-tight">VisitNepal 🇳🇵</h1>
                 <p className="text-xs text-amber-200">Naturally Nepal, Once is Not Enough</p>
               </div>
             </Link>
