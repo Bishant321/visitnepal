@@ -17,6 +17,7 @@ import MyBookings from './pages/MyBookings';
 import Profile from './pages/Profile';
 import AlertsDashboard from './pages/AlertsDashboard';
 import HostDashboard from './pages/HostDashboard';
+import HostProfile from './pages/HostProfile';
 import __Layout from './Layout.jsx';
 
 
@@ -40,6 +41,7 @@ export const PAGES = {
     "Profile": Profile,
     "AlertsDashboard": AlertsDashboard,
     "HostDashboard": HostDashboard,
+    "HostProfile": HostProfile,
 }
 
 export const pagesConfig = {

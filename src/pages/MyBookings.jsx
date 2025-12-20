@@ -67,7 +67,15 @@ export default function MyBookings() {
                     <p className="text-sm text-gray-600"><strong>Special requests:</strong> {booking.special_requests}</p>
                   </div>
                 )}
-                <div className="mt-4 flex gap-2">
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => navigate(createPageUrl("HostProfile") + `?email=${booking.created_by}`)}
+                    className="border-purple-500 text-purple-600 hover:bg-purple-50"
+                  >
+                    View Host Profile
+                  </Button>
                   <Button
                     size="sm"
                     variant="outline"

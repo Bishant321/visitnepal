@@ -267,10 +267,18 @@ export default function ExperienceDetail() {
                     </Button>
                   </div>
 
-                  <div className="mt-6 pt-6 border-t text-sm text-gray-600 space-y-2">
-                    <p><strong>Host:</strong> {experience.host_name}</p>
+                  <div className="mt-6 pt-6 border-t text-sm space-y-3">
+                    <div>
+                      <p className="text-gray-500 text-xs mb-1">Hosted by</p>
+                      <button
+                        onClick={() => navigate(createPageUrl("HostProfile") + `?email=${experience.created_by}`)}
+                        className="text-indigo-600 font-semibold hover:text-indigo-800 transition-colors"
+                      >
+                        {experience.host_name}
+                      </button>
+                    </div>
                     {experience.max_participants && (
-                      <p><strong>Max participants:</strong> {experience.max_participants}</p>
+                      <p className="text-gray-600"><strong>Max participants:</strong> {experience.max_participants}</p>
                     )}
                   </div>
                 </div>
