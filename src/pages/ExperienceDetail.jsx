@@ -18,6 +18,7 @@ export default function ExperienceDetail() {
   const urlParams = new URLSearchParams(window.location.search);
   const experienceId = urlParams.get("id");
   const [showBooking, setShowBooking] = useState(false);
+  const [showChat, setShowChat] = useState(false);
 
   const { data: experiences = [], isLoading } = useQuery({
     queryKey: ['experiences'],
@@ -39,19 +40,49 @@ export default function ExperienceDetail() {
 
   const experience = experiences.find(e => e.id === experienceId);
 
-  const [bookingData, setBookingData] = useState({
-    booking_date: "",
-    participants: 1,
-    special_requests: "",
-    contact_email: user?.email || "",
-    contact_phone: ""
-  });
-
   const createBookingMutation = useMutation({
-    mutationFn: (data) => base44.entities.Booking.create(data),
+    mutationFn: async (data) => {
+      const booking = await base44.entities.Booking.create(data);
+      
+      // Send confirmation email to user
+      await base44.integrations.Core.SendEmail({
+        to: data.contact_email,
+        subject: `Booking Confirmation - ${data.experience_name}`,
+        body: `
+          <h2>Booking Confirmed!</h2>
+          <p>Hi ${user?.full_name},</p>
+          <p>Your booking for <strong>${data.experience_name}</strong> has been confirmed!</p>
+          <p><strong>Date:</strong> ${data.booking_date}</p>
+          <p><strong>Participants:</strong> ${data.participants}</p>
+          <p><strong>Total:</strong> $${data.total_price}</p>
+          <p>The host will contact you shortly with more details.</p>
+          <p>You can chat with the host anytime from your booking details page.</p>
+        `
+      });
+
+      // Send notification to host
+      await base44.integrations.Core.SendEmail({
+        to: experience.host_contact,
+        subject: `New Booking Request - ${data.experience_name}`,
+        body: `
+          <h2>New Booking Request</h2>
+          <p>Hi ${experience.host_name},</p>
+          <p>You have a new booking request for <strong>${data.experience_name}</strong></p>
+          <p><strong>Guest:</strong> ${user?.full_name}</p>
+          <p><strong>Date:</strong> ${data.booking_date}</p>
+          <p><strong>Participants:</strong> ${data.participants}</p>
+          <p><strong>Total:</strong> $${data.total_price}</p>
+          <p><strong>Contact:</strong> ${data.contact_email} | ${data.contact_phone}</p>
+          ${data.special_requests ? `<p><strong>Special Requests:</strong> ${data.special_requests}</p>` : ''}
+        `
+      });
+
+      return booking;
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['bookings'] });
-      toast.success("Booking request submitted! The host will contact you shortly.");
+      setShowBooking(false);
+      toast.success("Booking confirmed! Check your email for details.");
       navigate(createPageUrl("MyBookings"));
     },
   });
@@ -88,25 +119,12 @@ export default function ExperienceDetail() {
     }
   };
 
-  const handleBooking = (e) => {
-    e.preventDefault();
-    
-    // Calculate fees
-    const subtotal = bookingData.participants * experience.price;
-    const platformFee = subtotal * 0.05; // 5% platform fee
-    const total = subtotal + platformFee;
-    
-    // Create booking with payment info
+  const handleBookingComplete = (data) => {
     createBookingMutation.mutate({
       experience_id: experience.id,
       experience_name: experience.name,
-      ...bookingData,
-      total_price: total,
-      payment_breakdown: {
-        subtotal: subtotal,
-        platform_fee: platformFee,
-        total: total
-      }
+      ...data,
+      status: "confirmed"
     });
   };
 
@@ -214,16 +232,16 @@ export default function ExperienceDetail() {
           </div>
 
           <div className="lg:col-span-1">
-            <Card className="border-0 shadow-2xl sticky top-24">
-              <div className="p-6 bg-gradient-to-br from-indigo-50 to-purple-50">
-                <div className="flex items-baseline justify-between mb-6">
-                  <div>
-                    <span className="text-4xl font-bold text-gray-900">${experience.price}</span>
-                    <span className="text-gray-600 ml-2">per person</span>
+            {!showBooking && !showChat && (
+              <Card className="border-0 shadow-2xl sticky top-24">
+                <div className="p-6 bg-gradient-to-br from-indigo-50 to-purple-50">
+                  <div className="flex items-baseline justify-between mb-6">
+                    <div>
+                      <span className="text-4xl font-bold text-gray-900">${experience.price}</span>
+                      <span className="text-gray-600 ml-2">per person</span>
+                    </div>
                   </div>
-                </div>
 
-                {!showBooking ? (
                   <div className="space-y-3">
                     <Button
                       onClick={() => setShowBooking(true)}
@@ -239,81 +257,47 @@ export default function ExperienceDetail() {
                       <Heart className={`w-4 h-4 mr-2 ${isInWishlist ? 'fill-pink-600' : ''}`} />
                       {isInWishlist ? 'Saved to Wishlist' : 'Add to Wishlist'}
                     </Button>
+                    <Button
+                      onClick={() => setShowChat(true)}
+                      variant="outline"
+                      className="w-full py-3"
+                    >
+                      <MessageSquare className="w-4 h-4 mr-2" />
+                      Chat with Host
+                    </Button>
                   </div>
-                ) : (
-                  <form onSubmit={handleBooking} className="space-y-4">
-                    <div>
-                      <label className="text-sm font-medium text-gray-700 mb-1 block">Date</label>
-                      <Input
-                        type="date"
-                        value={bookingData.booking_date}
-                        onChange={(e) => setBookingData({...bookingData, booking_date: e.target.value})}
-                        required
-                        min={new Date().toISOString().split('T')[0]}
-                      />
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium text-gray-700 mb-1 block">Participants</label>
-                      <Input
-                        type="number"
-                        min="1"
-                        max={experience.max_participants}
-                        value={bookingData.participants}
-                        onChange={(e) => setBookingData({...bookingData, participants: parseInt(e.target.value)})}
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium text-gray-700 mb-1 block">Phone</label>
-                      <Input
-                        type="tel"
-                        value={bookingData.contact_phone}
-                        onChange={(e) => setBookingData({...bookingData, contact_phone: e.target.value})}
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium text-gray-700 mb-1 block">Special Requests</label>
-                      <Textarea
-                        value={bookingData.special_requests}
-                        onChange={(e) => setBookingData({...bookingData, special_requests: e.target.value})}
-                        rows={3}
-                      />
-                    </div>
-                    <div className="border-t pt-4 space-y-2">
-                      <div className="flex justify-between text-sm">
-                        <span className="text-gray-600">Subtotal</span>
-                        <span className="font-medium">${bookingData.participants * experience.price}</span>
-                      </div>
-                      <div className="flex justify-between text-sm">
-                        <span className="text-gray-600">Platform Fee (5%)</span>
-                        <span className="font-medium">${(bookingData.participants * experience.price * 0.05).toFixed(2)}</span>
-                      </div>
-                      <div className="flex justify-between pt-2 border-t">
-                        <span className="text-gray-900 font-semibold">Total</span>
-                        <span className="font-bold text-xl text-indigo-600">${(bookingData.participants * experience.price * 1.05).toFixed(2)}</span>
-                      </div>
-                      <p className="text-xs text-gray-500 mt-2">
-                        💳 Secure payment processed after host confirmation
-                      </p>
-                    </div>
-                    <Button type="submit" className="w-full bg-gradient-to-r from-indigo-600 to-purple-600">
-                      Confirm Booking
-                    </Button>
-                    <Button type="button" variant="outline" onClick={() => setShowBooking(false)} className="w-full">
-                      Cancel
-                    </Button>
-                  </form>
-                )}
 
-                <div className="mt-6 pt-6 border-t text-sm text-gray-600 space-y-2">
-                  <p><strong>Host:</strong> {experience.host_name}</p>
-                  {experience.max_participants && (
-                    <p><strong>Max participants:</strong> {experience.max_participants}</p>
-                  )}
+                  <div className="mt-6 pt-6 border-t text-sm text-gray-600 space-y-2">
+                    <p><strong>Host:</strong> {experience.host_name}</p>
+                    {experience.max_participants && (
+                      <p><strong>Max participants:</strong> {experience.max_participants}</p>
+                    )}
+                  </div>
                 </div>
+              </Card>
+            )}
+
+            {showBooking && (
+              <div className="sticky top-24">
+                <BookingWizard
+                  experience={experience}
+                  user={user}
+                  onComplete={handleBookingComplete}
+                  onCancel={() => setShowBooking(false)}
+                />
               </div>
-            </Card>
+            )}
+
+            {showChat && (
+              <div className="sticky top-24">
+                <ChatWindow
+                  experienceId={experience.id}
+                  receiverEmail={experience.host_contact}
+                  receiverName={experience.host_name}
+                  onClose={() => setShowChat(false)}
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -11,6 +11,7 @@ import { createPageUrl } from "@/utils";
 
 export default function MyBookings() {
   const navigate = useNavigate();
+  const [selectedChat, setSelectedChat] = useState(null);
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me(),
@@ -89,6 +90,21 @@ export default function MyBookings() {
           )}
         </div>
       </div>
+
+      {/* Chat Modal */}
+      {selectedChat && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="max-w-2xl w-full">
+            <ChatWindow
+              bookingId={selectedChat.bookingId}
+              experienceId={selectedChat.experienceId}
+              receiverEmail={user?.email}
+              receiverName={selectedChat.hostName}
+              onClose={() => setSelectedChat(null)}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
