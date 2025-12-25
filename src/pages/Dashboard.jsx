@@ -18,12 +18,14 @@ import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import ChatWindow from "../components/chat/ChatWindow";
+import BookingManager from "../components/booking/BookingManager";
 
 export default function Dashboard() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [editingProfile, setEditingProfile] = useState(false);
   const [selectedChat, setSelectedChat] = useState(null);
+  const [selectedBooking, setSelectedBooking] = useState(null);
   const [profileData, setProfileData] = useState({});
 
   const { data: user, isLoading: loadingUser } = useQuery({
@@ -150,10 +152,14 @@ export default function Dashboard() {
 
         {/* Main Content Tabs */}
         <Tabs defaultValue="bookings" className="space-y-6">
-          <TabsList className="grid grid-cols-2 md:grid-cols-5 w-full bg-white shadow-lg rounded-xl p-2 h-auto">
+          <TabsList className="grid grid-cols-3 md:grid-cols-6 w-full bg-white shadow-lg rounded-xl p-2 h-auto">
             <TabsTrigger value="bookings" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white">
               <ShoppingBag className="w-4 h-4 mr-2" />
               Bookings
+            </TabsTrigger>
+            <TabsTrigger value="history" className="data-[state=active]:bg-gray-600 data-[state=active]:text-white">
+              <Clock className="w-4 h-4 mr-2" />
+              History
             </TabsTrigger>
             <TabsTrigger value="wishlist" className="data-[state=active]:bg-pink-600 data-[state=active]:text-white">
               <Heart className="w-4 h-4 mr-2" />
@@ -177,13 +183,18 @@ export default function Dashboard() {
           <TabsContent value="bookings" className="space-y-4">
             <Card className="border-0 shadow-lg">
               <CardHeader className="bg-gradient-to-r from-indigo-50 to-purple-50">
-                <CardTitle className="flex items-center gap-2">
-                  <ShoppingBag className="w-5 h-5" />
-                  My Bookings ({bookings.length})
-                </CardTitle>
+                <div className="flex justify-between items-center">
+                  <CardTitle className="flex items-center gap-2">
+                    <ShoppingBag className="w-5 h-5" />
+                    Active Bookings ({bookings.filter(b => b.status !== "cancelled" && b.status !== "completed").length})
+                  </CardTitle>
+                  <Button onClick={() => navigate(createPageUrl("GroupChatManager"))} variant="outline" size="sm">
+                    Group Chats
+                  </Button>
+                </div>
               </CardHeader>
               <CardContent className="p-6 space-y-4">
-                {bookings.length === 0 ? (
+                {bookings.filter(b => b.status !== "cancelled" && b.status !== "completed").length === 0 ? (
                   <div className="text-center py-12">
                     <Calendar className="w-16 h-16 text-gray-300 mx-auto mb-4" />
                     <p className="text-gray-500 mb-4">No bookings yet</p>
@@ -192,7 +203,7 @@ export default function Dashboard() {
                     </Button>
                   </div>
                 ) : (
-                  bookings.map((booking) => (
+                  bookings.filter(b => b.status !== "cancelled" && b.status !== "completed").map((booking) => (
                     <Card key={booking.id} className="border border-gray-200 hover:shadow-lg transition-shadow">
                       <CardContent className="p-6">
                         <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
@@ -230,17 +241,10 @@ export default function Dashboard() {
                             <div className="flex flex-wrap gap-2">
                               <Button
                                 size="sm"
-                                variant="outline"
-                                onClick={() => navigate(createPageUrl("ExperienceDetail") + `?id=${booking.experience_id}`)}
+                                onClick={() => setSelectedBooking(booking.id)}
+                                className="bg-indigo-600"
                               >
-                                View Experience
-                              </Button>
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={() => navigate(createPageUrl("HostProfile") + `?email=${booking.created_by}`)}
-                              >
-                                Host Profile
+                                Manage Booking
                               </Button>
                               <Button
                                 size="sm"
@@ -257,13 +261,69 @@ export default function Dashboard() {
                               <Button
                                 size="sm"
                                 variant="outline"
-                                onClick={() => navigate(createPageUrl("Maps") + "?booking=" + booking.id)}
+                                onClick={() => navigate(createPageUrl("ExperienceDetail") + `?id=${booking.experience_id}`)}
                               >
-                                <MapPin className="w-4 h-4 mr-1" />
-                                Map
+                                View Details
                               </Button>
                             </div>
                           </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Booking History Tab */}
+          <TabsContent value="history" className="space-y-4">
+            <Card className="border-0 shadow-lg">
+              <CardHeader className="bg-gradient-to-r from-gray-50 to-slate-50">
+                <CardTitle className="flex items-center gap-2">
+                  <Clock className="w-5 h-5" />
+                  Booking History ({bookings.filter(b => b.status === "completed" || b.status === "cancelled").length})
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-6 space-y-4">
+                {bookings.filter(b => b.status === "completed" || b.status === "cancelled").length === 0 ? (
+                  <div className="text-center py-12">
+                    <Clock className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                    <p className="text-gray-500">No booking history yet</p>
+                  </div>
+                ) : (
+                  bookings.filter(b => b.status === "completed" || b.status === "cancelled").map((booking) => (
+                    <Card key={booking.id} className="border border-gray-200">
+                      <CardContent className="p-6">
+                        <div className="flex justify-between items-start mb-4">
+                          <div>
+                            <h3 className="text-xl font-bold text-gray-900 mb-1">{booking.experience_name}</h3>
+                            <div className="flex items-center gap-4 text-sm text-gray-600">
+                              <span className="flex items-center gap-1">
+                                <Calendar className="w-4 h-4" />
+                                {format(new Date(booking.booking_date), "MMM d, yyyy")}
+                              </span>
+                              <span>{booking.participants} participants</span>
+                            </div>
+                          </div>
+                          <Badge className={`${statusColors[booking.status]} border`}>
+                            {booking.status}
+                          </Badge>
+                        </div>
+                        <div className="flex justify-between items-center pt-3 border-t">
+                          <div>
+                            <p className="text-2xl font-bold text-gray-900">${booking.total_price}</p>
+                            <p className="text-sm text-gray-500">
+                              Booked on {format(new Date(booking.created_date), "MMM d, yyyy")}
+                            </p>
+                          </div>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => navigate(createPageUrl("ExperienceDetail") + `?id=${booking.experience_id}`)}
+                          >
+                            View Experience
+                          </Button>
                         </div>
                       </CardContent>
                     </Card>
@@ -628,6 +688,18 @@ export default function Dashboard() {
               receiverEmail={user?.email}
               receiverName={selectedChat.hostName}
               onClose={() => setSelectedChat(null)}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Booking Manager Modal */}
+      {selectedBooking && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="max-w-2xl w-full">
+            <BookingManager
+              bookingId={selectedBooking}
+              onClose={() => setSelectedBooking(null)}
             />
           </div>
         </div>
