@@ -1,47 +1,49 @@
-import Home from './pages/Home';
-import Destinations from './pages/Destinations';
-import DestinationDetail from './pages/DestinationDetail';
-import Trekking from './pages/Trekking';
-import TrekkingDetail from './pages/TrekkingDetail';
+import AIPlanner from './pages/AIPlanner';
+import Alerts from './pages/Alerts';
+import AlertsDashboard from './pages/AlertsDashboard';
 import Culture from './pages/Culture';
 import CultureDetail from './pages/CultureDetail';
-import MyPlans from './pages/MyPlans';
-import AIPlanner from './pages/AIPlanner';
+import DestinationDetail from './pages/DestinationDetail';
+import Destinations from './pages/Destinations';
+import ExperienceDetail from './pages/ExperienceDetail';
+import Experiences from './pages/Experiences';
 import Forum from './pages/Forum';
 import ForumPost from './pages/ForumPost';
-import Maps from './pages/Maps';
-import Alerts from './pages/Alerts';
-import Experiences from './pages/Experiences';
-import ExperienceDetail from './pages/ExperienceDetail';
-import MyBookings from './pages/MyBookings';
-import Profile from './pages/Profile';
-import AlertsDashboard from './pages/AlertsDashboard';
+import Home from './pages/Home';
 import HostDashboard from './pages/HostDashboard';
 import HostProfile from './pages/HostProfile';
+import Maps from './pages/Maps';
+import MyBookings from './pages/MyBookings';
+import MyPlans from './pages/MyPlans';
+import Profile from './pages/Profile';
+import Trekking from './pages/Trekking';
+import TrekkingDetail from './pages/TrekkingDetail';
+import Dashboard from './pages/Dashboard';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
-    "Home": Home,
-    "Destinations": Destinations,
-    "DestinationDetail": DestinationDetail,
-    "Trekking": Trekking,
-    "TrekkingDetail": TrekkingDetail,
+    "AIPlanner": AIPlanner,
+    "Alerts": Alerts,
+    "AlertsDashboard": AlertsDashboard,
     "Culture": Culture,
     "CultureDetail": CultureDetail,
-    "MyPlans": MyPlans,
-    "AIPlanner": AIPlanner,
+    "DestinationDetail": DestinationDetail,
+    "Destinations": Destinations,
+    "ExperienceDetail": ExperienceDetail,
+    "Experiences": Experiences,
     "Forum": Forum,
     "ForumPost": ForumPost,
-    "Maps": Maps,
-    "Alerts": Alerts,
-    "Experiences": Experiences,
-    "ExperienceDetail": ExperienceDetail,
-    "MyBookings": MyBookings,
-    "Profile": Profile,
-    "AlertsDashboard": AlertsDashboard,
+    "Home": Home,
     "HostDashboard": HostDashboard,
     "HostProfile": HostProfile,
+    "Maps": Maps,
+    "MyBookings": MyBookings,
+    "MyPlans": MyPlans,
+    "Profile": Profile,
+    "Trekking": Trekking,
+    "TrekkingDetail": TrekkingDetail,
+    "Dashboard": Dashboard,
 }
 
 export const pagesConfig = {

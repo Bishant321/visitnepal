@@ -19,7 +19,7 @@ export default function Layout({ children, currentPageName }) {
     { name: t('experiences'), key: "experiences", url: createPageUrl("Experiences"), icon: ShoppingBag },
     { name: t('maps'), key: "maps", url: createPageUrl("Maps"), icon: Map },
     { name: t('alerts'), key: "alerts", url: createPageUrl("AlertsDashboard"), icon: Bell },
-    { name: t('myPlans'), key: "myPlans", url: createPageUrl("MyPlans"), icon: User },
+    { name: "Dashboard", key: "dashboard", url: createPageUrl("Dashboard"), icon: User },
   ];
 
   return (
@@ -88,7 +88,7 @@ export default function Layout({ children, currentPageName }) {
                 <p className="text-xs text-amber-200">🔐 {t('secureLogin')}</p>
               </div>
               <button
-                onClick={() => window.location.href = createPageUrl("Profile")}
+                onClick={() => window.location.href = createPageUrl("Dashboard")}
                 className="w-11 h-11 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white font-bold shadow-lg hover:shadow-xl transition-shadow"
               >
                 {user?.full_name?.[0] || "N"}
