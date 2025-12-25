@@ -5,7 +5,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Send, Paperclip, X, Lock } from "lucide-react";
+import { Send, Paperclip, X, Lock, Check, CheckCheck } from "lucide-react";
 import { format } from "date-fns";
 
 export default function ChatWindow({ bookingId, experienceId, receiverEmail, receiverName, onClose }) {
@@ -13,6 +13,8 @@ export default function ChatWindow({ bookingId, experienceId, receiverEmail, rec
   const messagesEndRef = useRef(null);
   const [message, setMessage] = useState("");
   const [attachment, setAttachment] = useState(null);
+  const [isTyping, setIsTyping] = useState(false);
+  const typingTimeoutRef = useRef(null);
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -48,6 +50,13 @@ export default function ChatWindow({ bookingId, experienceId, receiverEmail, rec
     },
   });
 
+  const markAsReadMutation = useMutation({
+    mutationFn: ({ id }) => base44.entities.ChatMessage.update(id, { read: true, read_at: new Date().toISOString() }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['chatMessages'] });
+    },
+  });
+
   const uploadFileMutation = useMutation({
     mutationFn: (file) => base44.integrations.Core.UploadFile({ file }),
   });
@@ -74,7 +83,24 @@ export default function ChatWindow({ bookingId, experienceId, receiverEmail, rec
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+    
+    // Mark messages as read
+    messages.forEach((msg) => {
+      if (msg.receiver_email === user?.email && !msg.read) {
+        markAsReadMutation.mutate({ id: msg.id });
+      }
+    });
+  }, [messages, user]);
+
+  const handleTyping = () => {
+    setIsTyping(true);
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
+    typingTimeoutRef.current = setTimeout(() => {
+      setIsTyping(false);
+    }, 1000);
+  };
 
   return (
     <Card className="border-0 shadow-2xl h-[600px] flex flex-col">
@@ -116,9 +142,18 @@ export default function ChatWindow({ bookingId, experienceId, receiverEmail, rec
                       📎 View Attachment
                     </a>
                   )}
-                  <p className="text-xs opacity-75 mt-1">
-                    {format(new Date(msg.created_date), "MMM d, h:mm a")}
-                  </p>
+                  <div className="flex items-center gap-1 justify-end mt-1">
+                    <p className="text-xs opacity-75">
+                      {format(new Date(msg.created_date), "h:mm a")}
+                    </p>
+                    {isMe && (
+                      msg.read ? (
+                        <CheckCheck className="w-3 h-3 opacity-75" title="Read" />
+                      ) : (
+                        <Check className="w-3 h-3 opacity-75" title="Sent" />
+                      )
+                    )}
+                  </div>
                 </div>
               </div>
             );
@@ -127,6 +162,9 @@ export default function ChatWindow({ bookingId, experienceId, receiverEmail, rec
         <div ref={messagesEndRef} />
       </CardContent>
       <div className="p-4 border-t bg-gray-50">
+        {isTyping && (
+          <p className="text-xs text-gray-500 mb-2">{receiverName} is typing...</p>
+        )}
         {attachment && (
           <div className="mb-2 p-2 bg-blue-100 rounded-lg flex items-center justify-between">
             <span className="text-sm">📎 {attachment.name}</span>
@@ -139,7 +177,7 @@ export default function ChatWindow({ bookingId, experienceId, receiverEmail, rec
           <Input
             placeholder="Type your message..."
             value={message}
-            onChange={(e) => setMessage(e.target.value)}
+            onChange={(e) => { setMessage(e.target.value); handleTyping(); }}
             onKeyPress={(e) => e.key === 'Enter' && handleSend()}
             className="flex-1"
           />

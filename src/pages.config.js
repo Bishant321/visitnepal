@@ -21,6 +21,7 @@ import TrekkingDetail from './pages/TrekkingDetail';
 import Dashboard from './pages/Dashboard';
 import DocumentManager from './pages/DocumentManager';
 import IoTMonitor from './pages/IoTMonitor';
+import GroupChatManager from './pages/GroupChatManager';
 import __Layout from './Layout.jsx';
 
 
@@ -48,6 +49,7 @@ export const PAGES = {
     "Dashboard": Dashboard,
     "DocumentManager": DocumentManager,
     "IoTMonitor": IoTMonitor,
+    "GroupChatManager": GroupChatManager,
 }
 
 export const pagesConfig = {
