@@ -5,7 +5,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Send, Paperclip, X } from "lucide-react";
+import { Send, Paperclip, X, Lock } from "lucide-react";
 import { format } from "date-fns";
 
 export default function ChatWindow({ bookingId, experienceId, receiverEmail, receiverName, onClose }) {
@@ -84,6 +84,10 @@ export default function ChatWindow({ bookingId, experienceId, receiverEmail, rec
             💬 Chat with {receiverName}
             <Badge variant="outline" className="ml-2">
               {messages.length} messages
+            </Badge>
+            <Badge className="bg-green-100 text-green-700 border-green-200">
+              <Lock className="w-3 h-3 mr-1" />
+              Encrypted
             </Badge>
           </CardTitle>
           {onClose && (
