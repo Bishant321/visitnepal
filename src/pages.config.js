@@ -19,6 +19,8 @@ import Profile from './pages/Profile';
 import Trekking from './pages/Trekking';
 import TrekkingDetail from './pages/TrekkingDetail';
 import Dashboard from './pages/Dashboard';
+import DocumentManager from './pages/DocumentManager';
+import IoTMonitor from './pages/IoTMonitor';
 import __Layout from './Layout.jsx';
 
 
@@ -44,6 +46,8 @@ export const PAGES = {
     "Trekking": Trekking,
     "TrekkingDetail": TrekkingDetail,
     "Dashboard": Dashboard,
+    "DocumentManager": DocumentManager,
+    "IoTMonitor": IoTMonitor,
 }
 
 export const pagesConfig = {
