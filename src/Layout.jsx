@@ -44,7 +44,7 @@ export default function Layout({ children, currentPageName }) {
       `}</style>
 
       {/* Top Header */}
-      <header className="bg-gradient-to-r from-red-900 via-red-800 to-amber-900 text-white sticky top-0 z-50 shadow-2xl">
+      <header className="bg-gradient-to-r from-red-900 via-red-800 to-amber-900 text-white sticky top-0 z-50 shadow-2xl" style={{ paddingTop: "env(safe-area-inset-top)" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             <Link to={createPageUrl("Home")} className="flex items-center gap-4">
@@ -105,8 +105,8 @@ export default function Layout({ children, currentPageName }) {
       </main>
 
       {/* Mobile Bottom Navigation */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-gradient-to-r from-red-900 via-red-800 to-amber-900 border-t border-red-700/50 z-50 backdrop-blur-xl">
-        <div className="flex justify-around items-center h-20 px-2">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-gradient-to-r from-red-900 via-red-800 to-amber-900 border-t border-red-700/50 z-50 backdrop-blur-xl" style={{ paddingBottom: "env(safe-area-inset-bottom)", paddingLeft: "env(safe-area-inset-left)", paddingRight: "env(safe-area-inset-right)" }}>
+        <div className="flex justify-around items-center h-16 px-2">
           {navItems.map((item) => (
             <Link
               key={item.key}
