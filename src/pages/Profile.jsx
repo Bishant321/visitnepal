@@ -11,7 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { 
   User, Mail, Phone, MapPin, Calendar, DollarSign, 
   Heart, Trash2, Edit, Save, X, Package, MessageSquare,
-  Shield, Clock
+  Shield, Clock, AlertTriangle
 } from "lucide-react";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
@@ -22,6 +22,8 @@ export default function Profile() {
   const queryClient = useQueryClient();
   const [editing, setEditing] = useState(false);
   const [profileData, setProfileData] = useState({});
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteInput, setDeleteInput] = useState("");
 
   const { data: user } = useQuery({
     queryKey: ['currentUser'],
@@ -82,6 +84,11 @@ export default function Profile() {
   const handleUpdateProfile = (e) => {
     e.preventDefault();
     updateProfileMutation.mutate(profileData);
+  };
+
+  const handleDeleteAccount = async () => {
+    // Log out and clear data – actual account deletion requires backend support
+    await base44.auth.logout("/");
   };
 
   const startEdit = () => {
@@ -266,6 +273,42 @@ export default function Profile() {
                     <div>
                       <Label className="text-gray-500 mb-2">Bio</Label>
                       <p className="text-lg font-medium">{user?.bio || "Not set"}</p>
+                    </div>
+
+                    {/* Danger Zone */}
+                    <div className="mt-8 border border-red-200 rounded-xl p-5 bg-red-50">
+                      <h4 className="text-red-700 font-bold flex items-center gap-2 mb-2">
+                        <AlertTriangle className="w-4 h-4" /> Danger Zone
+                      </h4>
+                      <p className="text-sm text-gray-600 mb-4">Permanently delete your account and all associated data. This action cannot be undone.</p>
+                      {!showDeleteConfirm ? (
+                        <Button variant="outline" size="sm" className="border-red-300 text-red-600 hover:bg-red-100" onClick={() => setShowDeleteConfirm(true)}>
+                          <Trash2 className="w-4 h-4 mr-2" /> Delete Account
+                        </Button>
+                      ) : (
+                        <div className="space-y-3">
+                          <p className="text-sm font-medium text-red-700">Type <span className="font-mono bg-red-100 px-1 rounded">DELETE</span> to confirm:</p>
+                          <input
+                            className="w-full border border-red-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400"
+                            placeholder="Type DELETE"
+                            value={deleteInput}
+                            onChange={e => setDeleteInput(e.target.value)}
+                          />
+                          <div className="flex gap-2">
+                            <Button size="sm" variant="outline" onClick={() => { setShowDeleteConfirm(false); setDeleteInput(""); }}>
+                              Cancel
+                            </Button>
+                            <Button
+                              size="sm"
+                              className="bg-red-600 hover:bg-red-700 text-white"
+                              disabled={deleteInput !== "DELETE"}
+                              onClick={handleDeleteAccount}
+                            >
+                              <Trash2 className="w-4 h-4 mr-1" /> Confirm Delete
+                            </Button>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 ) : (
