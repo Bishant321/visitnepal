@@ -6,6 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { Send, Bot, User, MapPin, Mountain, Landmark, Compass, Sparkles, Mic, MessageSquare } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import VoiceAssistant from "../components/chat/VoiceAssistant";
+import LiveTravelInfo from "../components/chat/LiveTravelInfo";
+import { format } from "date-fns";
 
 const QUICK_PROMPTS = [
   { label: "🏔️ Best mountains to visit", text: "What are the best mountains to visit in Nepal?" },
@@ -56,10 +58,19 @@ export default function TravelChatbot() {
         .map(m => `${m.role === "user" ? "User" : "Guide"}: ${m.content}`)
         .join("\n\n");
 
+      const today = format(new Date(), "EEEE, MMMM d, yyyy");
+      const month = format(new Date(), "MMMM");
+
       const response = await base44.integrations.Core.InvokeLLM({
         prompt: `You are an expert AI Nepal Travel Guide chatbot for the VisitNepal app. You help tourists discover Nepal's destinations, trekking routes, cultural heritage, and travel tips.
 
-Your personality: Friendly, knowledgeable, enthusiastic about Nepal. You use emojis occasionally. You always provide practical, accurate, and helpful travel information.
+TODAY'S DATE: ${today}. Always factor in the current date and season when giving advice. ${month} is important for:
+- Trekking conditions and trail accessibility right now
+- Current weather patterns in Nepal
+- Any festivals or events happening this month
+- Permit requirements and crowd levels for this season
+
+Your personality: Friendly, knowledgeable, enthusiastic about Nepal. You use emojis occasionally. You always provide practical, accurate, and date-aware travel information.
 
 Key knowledge areas:
 - Nepal's top destinations: Everest region, Annapurna, Pokhara, Kathmandu Valley, Chitwan, Lumbini, Mustang
@@ -74,7 +85,7 @@ Key knowledge areas:
 CONVERSATION SO FAR:
 ${conversationHistory}
 
-Now respond to the latest user message. Be concise but informative (2-4 paragraphs max). Include specific destination names, tips, or recommendations. If relevant, suggest related topics they might want to explore.`,
+Now respond to the latest user message. Be concise but informative (2-4 paragraphs max). IMPORTANT: If relevant, include current date-specific advice (e.g., "Right now in ${month}..."). Include specific destination names, tips, or recommendations.`,
         add_context_from_internet: true,
         model: "gemini_3_flash"
       });
@@ -143,6 +154,11 @@ Now respond to the latest user message. Be concise but informative (2-4 paragrap
             <VoiceAssistant />
           </div>
         )}
+
+        {mode === "chat" && <>
+        {/* Live Travel Info Panel */}
+        <LiveTravelInfo />
+        </> }
 
         {mode === "chat" && <>
         {/* Quick Prompt Chips */}
