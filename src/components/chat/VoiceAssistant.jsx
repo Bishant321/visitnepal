@@ -99,8 +99,8 @@ export default function VoiceAssistant() {
       || voices.find(v => v.lang.startsWith("en"));
     if (voice) utterance.voice = voice;
     utterance.lang = language === "ne" ? "ne-NP" : "en-US";
-    utterance.rate = 0.9;
-    utterance.pitch = 1.1;
+    utterance.rate = language === "ne" ? 0.8 : 0.9;
+    utterance.pitch = language === "ne" ? 1.0 : 1.1;
 
     utterance.onstart = () => setStatus("speaking");
     utterance.onend = () => setStatus("idle");
@@ -150,8 +150,8 @@ export default function VoiceAssistant() {
 
     try {
       const langInstruction = lang === "ne"
-        ? "IMPORTANT: You MUST respond entirely in Nepali language (Devanagari script). Do NOT use English."
-        : "Respond in clear English.";
+        ? "IMPORTANT: You MUST respond entirely in Nepali language (Devanagari script). Do NOT use English at all. Use conversational, simple Nepali."
+        : "Respond in clear, friendly English.";
 
       const reply = await base44.integrations.Core.InvokeLLM({
         prompt: `You are a friendly Nepal Travel Guide voice assistant. ${langInstruction}
