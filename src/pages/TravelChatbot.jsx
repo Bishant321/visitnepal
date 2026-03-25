@@ -3,8 +3,9 @@ import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Send, Bot, User, MapPin, Mountain, Landmark, Compass, Sparkles } from "lucide-react";
+import { Send, Bot, User, MapPin, Mountain, Landmark, Compass, Sparkles, Mic, MessageSquare } from "lucide-react";
 import ReactMarkdown from "react-markdown";
+import VoiceAssistant from "../components/chat/VoiceAssistant";
 
 const QUICK_PROMPTS = [
   { label: "🏔️ Best mountains to visit", text: "What are the best mountains to visit in Nepal?" },
@@ -26,6 +27,7 @@ function TypingDots() {
 }
 
 export default function TravelChatbot() {
+  const [mode, setMode] = useState("chat"); // chat | voice
   const [messages, setMessages] = useState([
     {
       role: "assistant",
@@ -115,7 +117,34 @@ Now respond to the latest user message. Be concise but informative (2-4 paragrap
         </div>
       </div>
 
+      {/* Mode Toggle */}
+      <div className="flex justify-center gap-2 pt-4">
+        <Button
+          onClick={() => setMode("chat")}
+          variant={mode === "chat" ? "default" : "outline"}
+          className={mode === "chat" ? "bg-gradient-to-r from-red-800 to-amber-700" : ""}
+        >
+          <MessageSquare className="w-4 h-4 mr-2" />
+          Text Chat
+        </Button>
+        <Button
+          onClick={() => setMode("voice")}
+          variant={mode === "voice" ? "default" : "outline"}
+          className={mode === "voice" ? "bg-gradient-to-r from-red-800 to-amber-700" : ""}
+        >
+          <Mic className="w-4 h-4 mr-2" />
+          Voice Assistant (EN/नेपाली)
+        </Button>
+      </div>
+
       <div className="flex-1 max-w-4xl mx-auto w-full px-4 py-6 flex flex-col gap-4">
+        {mode === "voice" && (
+          <div className="bg-white rounded-2xl shadow-xl border border-gray-100">
+            <VoiceAssistant />
+          </div>
+        )}
+
+        {mode === "chat" && <>
         {/* Quick Prompt Chips */}
         <div>
           <p className="text-sm text-gray-500 mb-2 font-medium">Quick Questions:</p>
@@ -210,6 +239,7 @@ Now respond to the latest user message. Be concise but informative (2-4 paragrap
             </p>
           </div>
         </div>
+        </>}
       </div>
     </div>
   );
