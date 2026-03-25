@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { Mountain, Compass, Landmark, Map, User, Sparkles, MessageSquare, Bell, ShoppingBag, FileText, Activity } from "lucide-react";
+import { Mountain, Compass, Landmark, Map, User, Sparkles, MessageSquare, Bell, ShoppingBag, FileText, Activity, Bot } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import LanguageSwitcher, { useLanguage } from "../components/LanguageSwitcher";
@@ -17,6 +17,7 @@ export default function Layout({ children, currentPageName }) {
   const navItems = [
     { name: t('discover'), key: "discover", url: createPageUrl("Home"), icon: Compass },
     { name: t('experiences'), key: "experiences", url: createPageUrl("Experiences"), icon: ShoppingBag },
+    { name: "AI Guide", key: "chatbot", url: createPageUrl("TravelChatbot"), icon: Bot },
     { name: "IoT Monitor", key: "iot", url: createPageUrl("IoTMonitor"), icon: Activity },
     { name: "Documents", key: "documents", url: createPageUrl("DocumentManager"), icon: FileText },
     { name: "Dashboard", key: "dashboard", url: createPageUrl("Dashboard"), icon: User },
