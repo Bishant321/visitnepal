@@ -84,5 +84,43 @@
 
   body {
     @apply bg-background text-foreground;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
   }
+
+  html {
+    overscroll-behavior: none;
+  }
+}
+
+/* iOS Safe Area support */
+.safe-top    { padding-top: env(safe-area-inset-top); }
+.safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+.safe-left   { padding-left: env(safe-area-inset-left); }
+.safe-right  { padding-right: env(safe-area-inset-right); }
+
+/* No text selection on interactive UI elements */
+button, a, nav, [role="button"], .no-select {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Pull-to-refresh indicator */
+.ptr-indicator {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: white;
+  border-radius: 9999px;
+  padding: 8px 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  font-size: 13px;
+  font-weight: 600;
+  color: #7f1d1d;
+  transition: transform 0.2s ease, opacity 0.2s ease;
 }
