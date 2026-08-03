@@ -1,0 +1,23 @@
+{
+  "type": "object",
+  "properties": {
+    "phone": {
+      "type": "string"
+    },
+    "nationality": {
+      "type": "string"
+    },
+    "preferred_activities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "name": "User",
+  "required": [
+    "phone",
+    "nationality",
+    "preferred_activities"
+  ]
+}

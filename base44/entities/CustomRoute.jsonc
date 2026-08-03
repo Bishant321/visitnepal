@@ -1,0 +1,64 @@
+{
+  "name": "CustomRoute",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "waypoints": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "latitude": {
+            "type": "number"
+          },
+          "longitude": {
+            "type": "number"
+          },
+          "order": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "distance_km": {
+      "type": "number"
+    },
+    "estimated_duration": {
+      "type": "string"
+    },
+    "route_type": {
+      "type": "string",
+      "enum": [
+        "trekking",
+        "driving",
+        "cycling",
+        "walking"
+      ]
+    },
+    "difficulty": {
+      "type": "string",
+      "enum": [
+        "easy",
+        "moderate",
+        "difficult"
+      ]
+    },
+    "shared": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "name",
+    "waypoints",
+    "route_type"
+  ]
+}

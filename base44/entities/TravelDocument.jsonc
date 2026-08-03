@@ -1,0 +1,57 @@
+{
+  "name": "TravelDocument",
+  "type": "object",
+  "properties": {
+    "document_type": {
+      "type": "string",
+      "enum": [
+        "passport",
+        "visa",
+        "ticket",
+        "insurance",
+        "itinerary",
+        "vaccination",
+        "other"
+      ],
+      "description": "Type of travel document"
+    },
+    "document_name": {
+      "type": "string",
+      "description": "Name/title of the document"
+    },
+    "file_url": {
+      "type": "string",
+      "description": "URL of the uploaded document"
+    },
+    "encrypted": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether the document is encrypted"
+    },
+    "expiry_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Document expiration date"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes about the document"
+    },
+    "file_size": {
+      "type": "number",
+      "description": "File size in bytes"
+    },
+    "shared_with": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Emails of users this document is shared with"
+    }
+  },
+  "required": [
+    "document_type",
+    "document_name",
+    "file_url"
+  ]
+}

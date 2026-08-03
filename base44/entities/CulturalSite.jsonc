@@ -1,0 +1,57 @@
+{
+  "name": "CulturalSite",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "temple",
+        "monastery",
+        "palace",
+        "stupa",
+        "festival",
+        "tradition"
+      ]
+    },
+    "location": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "history": {
+      "type": "string"
+    },
+    "significance": {
+      "type": "string"
+    },
+    "image_url": {
+      "type": "string"
+    },
+    "unesco_heritage": {
+      "type": "boolean",
+      "default": false
+    },
+    "entry_fee": {
+      "type": "string"
+    },
+    "opening_hours": {
+      "type": "string"
+    },
+    "festivals": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "name",
+    "category",
+    "location",
+    "description"
+  ]
+}

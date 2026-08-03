@@ -1,0 +1,33 @@
+{
+  "name": "Wishlist",
+  "type": "object",
+  "properties": {
+    "experience_id": {
+      "type": "string",
+      "description": "ID of the saved experience"
+    },
+    "experience_name": {
+      "type": "string"
+    },
+    "experience_category": {
+      "type": "string"
+    },
+    "experience_location": {
+      "type": "string"
+    },
+    "experience_price": {
+      "type": "number"
+    },
+    "experience_image_url": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Personal notes about this experience"
+    }
+  },
+  "required": [
+    "experience_id",
+    "experience_name"
+  ]
+}

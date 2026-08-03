@@ -1,0 +1,49 @@
+{
+  "name": "ForumPost",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Post title"
+    },
+    "content": {
+      "type": "string",
+      "description": "Post content"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "experience",
+        "question",
+        "tip",
+        "photo_gallery",
+        "route_advice"
+      ],
+      "description": "Post category"
+    },
+    "images": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Photo URLs"
+    },
+    "location": {
+      "type": "string",
+      "description": "Related destination/location"
+    },
+    "likes": {
+      "type": "number",
+      "default": 0
+    },
+    "views": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "title",
+    "content",
+    "category"
+  ]
+}

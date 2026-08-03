@@ -1,0 +1,50 @@
+{
+  "name": "CustomPOI",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "viewpoint",
+        "restaurant",
+        "campsite",
+        "shop",
+        "emergency",
+        "other"
+      ],
+      "description": "Type of point of interest"
+    },
+    "latitude": {
+      "type": "number"
+    },
+    "longitude": {
+      "type": "number"
+    },
+    "description": {
+      "type": "string"
+    },
+    "photos": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "region": {
+      "type": "string"
+    },
+    "rating": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 5
+    }
+  },
+  "required": [
+    "name",
+    "type",
+    "latitude",
+    "longitude"
+  ]
+}

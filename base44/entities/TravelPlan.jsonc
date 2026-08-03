@@ -1,0 +1,57 @@
+{
+  "name": "TravelPlan",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "end_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "destinations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "destination_name": {
+            "type": "string"
+          },
+          "days": {
+            "type": "number"
+          },
+          "notes": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "budget": {
+      "type": "string"
+    },
+    "travelers": {
+      "type": "number"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "planning",
+        "confirmed",
+        "completed"
+      ],
+      "default": "planning"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "title",
+    "start_date",
+    "end_date"
+  ]
+}

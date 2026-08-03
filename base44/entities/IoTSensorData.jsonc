@@ -1,0 +1,58 @@
+{
+  "name": "IoTSensorData",
+  "type": "object",
+  "properties": {
+    "destination_id": {
+      "type": "string",
+      "description": "Associated destination ID"
+    },
+    "destination_name": {
+      "type": "string",
+      "description": "Name of the destination"
+    },
+    "sensor_type": {
+      "type": "string",
+      "enum": [
+        "weather",
+        "air_quality",
+        "crowd_level",
+        "temperature",
+        "humidity"
+      ],
+      "description": "Type of sensor data"
+    },
+    "value": {
+      "type": "number",
+      "description": "Sensor reading value"
+    },
+    "unit": {
+      "type": "string",
+      "description": "Unit of measurement (e.g., \u00b0C, AQI, people/km\u00b2)"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "normal",
+        "warning",
+        "critical"
+      ],
+      "default": "normal",
+      "description": "Status based on threshold values"
+    },
+    "location": {
+      "type": "string",
+      "description": "Specific location within destination"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the reading was taken"
+    }
+  },
+  "required": [
+    "destination_name",
+    "sensor_type",
+    "value",
+    "unit"
+  ]
+}

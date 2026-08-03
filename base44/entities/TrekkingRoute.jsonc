@@ -1,0 +1,72 @@
+{
+  "name": "TrekkingRoute",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "duration_days": {
+      "type": "number",
+      "description": "Duration in days"
+    },
+    "difficulty": {
+      "type": "string",
+      "enum": [
+        "beginner",
+        "moderate",
+        "difficult",
+        "expert"
+      ]
+    },
+    "max_altitude": {
+      "type": "string"
+    },
+    "region": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "highlights": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "itinerary": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "day": {
+            "type": "number"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "best_season": {
+      "type": "string"
+    },
+    "image_url": {
+      "type": "string"
+    },
+    "permit_required": {
+      "type": "boolean",
+      "default": true
+    },
+    "estimated_cost": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "name",
+    "duration_days",
+    "difficulty"
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "name": "Booking",
+  "type": "object",
+  "properties": {
+    "experience_id": {
+      "type": "string"
+    },
+    "experience_name": {
+      "type": "string"
+    },
+    "booking_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "participants": {
+      "type": "number",
+      "minimum": 1
+    },
+    "total_price": {
+      "type": "number"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "confirmed",
+        "completed",
+        "cancelled"
+      ],
+      "default": "pending"
+    },
+    "payment_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "paid",
+        "refunded"
+      ],
+      "default": "pending"
+    },
+    "special_requests": {
+      "type": "string"
+    },
+    "contact_email": {
+      "type": "string"
+    },
+    "contact_phone": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "experience_id",
+    "experience_name",
+    "booking_date",
+    "participants",
+    "total_price"
+  ]
+}

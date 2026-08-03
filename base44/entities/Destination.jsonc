@@ -1,0 +1,74 @@
+{
+  "name": "Destination",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Destination name"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "mountain",
+        "city",
+        "heritage_site",
+        "national_park",
+        "village",
+        "lake"
+      ],
+      "description": "Type of destination"
+    },
+    "region": {
+      "type": "string",
+      "description": "Geographic region in Nepal"
+    },
+    "description": {
+      "type": "string"
+    },
+    "highlights": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "image_url": {
+      "type": "string"
+    },
+    "gallery": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "best_time_to_visit": {
+      "type": "string"
+    },
+    "altitude": {
+      "type": "string"
+    },
+    "activities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "difficulty": {
+      "type": "string",
+      "enum": [
+        "easy",
+        "moderate",
+        "challenging",
+        "extreme"
+      ]
+    },
+    "featured": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "name",
+    "type",
+    "description"
+  ]
+}

@@ -1,0 +1,80 @@
+{
+  "name": "Experience",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "cooking_class",
+        "cultural_tour",
+        "homestay",
+        "adventure",
+        "workshop",
+        "guided_trek"
+      ],
+      "description": "Experience category"
+    },
+    "location": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "highlights": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "duration": {
+      "type": "string",
+      "description": "Duration (e.g., 3 hours, 2 days)"
+    },
+    "price": {
+      "type": "number",
+      "description": "Price in USD"
+    },
+    "max_participants": {
+      "type": "number"
+    },
+    "includes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "image_url": {
+      "type": "string"
+    },
+    "host_name": {
+      "type": "string"
+    },
+    "host_contact": {
+      "type": "string"
+    },
+    "rating": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 5,
+      "default": 0
+    },
+    "reviews_count": {
+      "type": "number",
+      "default": 0
+    },
+    "available": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "name",
+    "category",
+    "location",
+    "description",
+    "price"
+  ]
+}

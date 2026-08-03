@@ -1,0 +1,49 @@
+{
+  "name": "GroupChat",
+  "type": "object",
+  "properties": {
+    "group_name": {
+      "type": "string",
+      "description": "Name of the chat group"
+    },
+    "group_description": {
+      "type": "string",
+      "description": "Description of the group purpose"
+    },
+    "members": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Email addresses of group members"
+    },
+    "admin_email": {
+      "type": "string",
+      "description": "Email of the group admin"
+    },
+    "group_type": {
+      "type": "string",
+      "enum": [
+        "experience",
+        "travel_plan",
+        "general"
+      ],
+      "default": "general",
+      "description": "Type of group chat"
+    },
+    "related_id": {
+      "type": "string",
+      "description": "ID of related experience or travel plan"
+    },
+    "encryption_enabled": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether messages are encrypted"
+    }
+  },
+  "required": [
+    "group_name",
+    "members",
+    "admin_email"
+  ]
+}
