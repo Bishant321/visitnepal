@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Calendar, Users, CreditCard, CheckCircle, ArrowLeft, ArrowRight } from "lucide-react";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import { base44 } from "@/api/base44Client";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY || "pk_test_51234567890");
 
@@ -25,22 +26,29 @@ function PaymentForm({ bookingData, totalAmount, onSuccess, onBack }) {
 
     try {
       const cardElement = elements.getElement(CardElement);
-      const { error: stripeError, paymentMethod } = await stripe.createPaymentMethod({
-        type: 'card',
-        card: cardElement,
-      });
 
-      if (stripeError) {
-        setError(stripeError.message);
+      // Create a PaymentIntent server-side (secure — secret key never reaches the client)
+      const intentRes = await base44.functions.invoke("create-payment-intent", {
+        amount: totalAmount,
+        booking_id: bookingData.booking_id,
+      });
+      if (intentRes.error) throw new Error(intentRes.error);
+
+      // Confirm the card payment with the returned client_secret
+      const { error: confirmError, paymentIntent } = await stripe.confirmCardPayment(
+        intentRes.client_secret,
+        { payment_method: { card: cardElement } }
+      );
+
+      if (confirmError) {
+        setError(confirmError.message);
         setProcessing(false);
         return;
       }
 
-      // In production, you would send payment_method.id to your backend
-      // For now, we'll simulate success
       onSuccess({
         ...bookingData,
-        payment_method_id: paymentMethod.id,
+        payment_intent_id: paymentIntent.id,
         payment_status: "paid"
       });
     } catch (err) {
