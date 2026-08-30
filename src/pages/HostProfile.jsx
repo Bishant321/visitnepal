@@ -17,7 +17,7 @@ export default function HostProfile() {
   const hostEmail = urlParams.get("email");
   const [showChat, setShowChat] = useState(false);
 
-  const { data: currentUser } = useQuery({
+  const { data: currentUser, isLoading } = useQuery({
     queryKey: ['currentUser'],
     queryFn: () => base44.auth.me(),
   });

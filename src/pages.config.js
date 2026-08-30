@@ -20,6 +20,7 @@ import Trekking from './pages/Trekking';
 import TrekkingDetail from './pages/TrekkingDetail';
 import Dashboard from './pages/Dashboard';
 import DocumentManager from './pages/DocumentManager';
+import EmergencyAlerts from './pages/EmergencyAlerts';
 import IoTMonitor from './pages/IoTMonitor';
 import GroupChatManager from './pages/GroupChatManager';
 import TravelChatbot from './pages/TravelChatbot';
@@ -49,6 +50,7 @@ export const PAGES = {
     "TrekkingDetail": TrekkingDetail,
     "Dashboard": Dashboard,
     "DocumentManager": DocumentManager,
+    "EmergencyAlerts": EmergencyAlerts,
     "IoTMonitor": IoTMonitor,
     "GroupChatManager": GroupChatManager,
     "TravelChatbot": TravelChatbot,
