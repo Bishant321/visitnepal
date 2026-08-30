@@ -24,26 +24,18 @@ function PaymentForm({ booking, onSuccess, onCancel }) {
 
     setProcessing(true);
     try {
-      const cardElement = elements.getElement(CardElement);
-
-      const intentRes = await base44.functions.invoke("create-payment-intent", {
-        amount: booking.total_price,
-        booking_id: booking.id,
+      const { error, paymentMethod } = await stripe.createPaymentMethod({
+        type: 'card',
+        card: elements.getElement(CardElement),
       });
-      if (intentRes.error) throw new Error(intentRes.error);
 
-      const { error: confirmError, paymentIntent } = await stripe.confirmCardPayment(
-        intentRes.client_secret,
-        { payment_method: { card: cardElement } }
-      );
-
-      if (confirmError) {
-        toast.error(confirmError.message);
+      if (error) {
+        toast.error(error.message);
       } else {
-        onSuccess(paymentIntent.id);
+        onSuccess(paymentMethod.id);
       }
     } catch (error) {
-      toast.error(error?.message || "Payment failed");
+      toast.error("Payment failed");
     } finally {
       setProcessing(false);
     }
