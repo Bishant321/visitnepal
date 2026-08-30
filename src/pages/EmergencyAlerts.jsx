@@ -299,6 +299,27 @@ export default function EmergencyAlerts() {
             </CardContent>
           </Card>
         )}
+
+        {/* Official disaster portal reference */}
+        <Card className="border-0 shadow-md mt-5">
+          <CardContent className="p-4">
+            <a
+              href="https://pmdrf.nchl.com.np/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-3"
+            >
+              <div className="p-2.5 rounded-xl bg-red-900 text-white shrink-0">
+                <Shield className="w-5 h-5" />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-bold text-gray-900 text-sm">National Disaster Risk Reduction Portal</h3>
+                <p className="text-xs text-gray-500">Official Government of Nepal disaster info — pmdrf.nchl.com.np</p>
+              </div>
+              <ChevronRight className="w-5 h-5 text-gray-400" />
+            </a>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
